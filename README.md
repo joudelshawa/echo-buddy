@@ -1,49 +1,58 @@
-# Echo Buddy v2 — smoother audio + no missing first words
+# Echo Buddy
 
-This updates the first MVP while preserving the same interface, animated cactus, waveform mode, pitch/speed controls, replay, and automatic listening.
+A tiny, privacy-conscious web app that automatically listens to short phrases, waits for a pause, and repeats them in an adjustable silly voice. It includes a dancing animated cactus, plus a setting to replace the character with a waveform.
 
-## Changes in this version
+## Run locally
 
-- **Pre-roll capture:** A small AudioWorklet records microphone PCM continuously, holding the latest ~650ms in memory even before it detects speech. Once it detects speech it includes this audio, so the opening consonant/word isn't lost.
-- **Offline processing:** The recorded phrase is transformed into an AudioBuffer with SoundTouchJS's `processOffline`, and *then* played normally. This eliminates real-time processing buffer starvation during playback. Note: any inherent artifacts from extreme pitch/time stretching can still happen.
-- **Audio edges:** Adds quiet padding before and after processing and fades audio ends to reduce cuts/clicks.
-- **Gentler defaults:** Pitch 1.35x, speed 1.0x for cleaner results. Try pitch 1.25–1.5x and speed 0.95–1.10x first.
-- **Pitch and speed sliders remain separate**, but changes now take effect on the **next repeat / when you click Replay**, not halfway through the current sentence.
+1. Install Node.js 22 or newer from https://nodejs.org/ if you do not have it already.
+2. Download and unzip this project.
+3. Open a terminal in the `echo-buddy-mvp` project folder.
+4. Run:
 
-## How to run locally
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-Requires Node.js 22+ and a current Chrome or Edge browser.
+5. Open **http://127.0.0.1:5173** on your computer.
+6. Press **Start listening**, allow microphone access, say a phrase, and pause.
 
-```bash
-npm install
-npm run dev
-```
+To shut it down, press **Ctrl + C** in the terminal.
 
-Then go to **http://127.0.0.1:5173** and press **Start listening**.
+**Tip for beginners:** If you're on a Mac, open Terminal, type `cd ` (with one trailing space), drag the unzipped project folder into Terminal, then press Enter. Now run the two commands above.
 
-If an older dev server is still running, stop it using Ctrl+C, then start this V2 folder instead. If Vite chooses another port, use the URL printed in your terminal.
+## Controls
 
-## Quick test
+- **Start/Stop listening:** Mic permission is requested only when starting.
+- **Pitch:** High = squeakier, low = deeper; independent of playback speed.
+- **Speed:** Talk faster or slower; independent of pitch.
+- **Character switch:** Hide the dancing cactus and show animated sound waves instead.
+- **Replay:** Repeat the most recent recording with current slider settings. Still works when the mic is stopped.
 
-1. Test with **pitch 1.00x, speed 1.00x** and say "Hello, can you hear the beginning of this sentence?" after the app says "Listening for your voice."
-2. Repeat with **pitch 1.35x, speed 1.00x**, then 1.50x.
-3. Press **Replay** after adjusting either slider; V2 re-renders the audio with your new settings.
-4. For cleaner recording, use headphones. The app ignores mic audio during playback, but speakers can still cause echo and noise.
+## How it works
 
-## Privacy, compatibility & limits
+- `getUserMedia` asks for permission to use your microphone.
+- An `AnalyserNode` checks whether sound is present (RMS threshold, *not* transcription).
+- `MediaRecorder` captures the short phrase until 950ms of silence, or 10s maximum.
+- SoundTouchJS AudioWorklet processes the recording with independent pitch and speed controls.
+- The sound is replayed locally; it is **not uploaded** and **not stored to a server**. It is held only in page memory until the tab closes.
 
-- Microphone input never goes to a server. Samples are processed in the browser and held in memory only.
-- No AI APIs or Python are needed.
-- This is a small prototype; simple volume-based speech detection can still be triggered by background noises and may miss very quiet speech.
-- On slower devices, offline transformation can add a short *processing delay* before playback (rather than choppy audio).
-- SoundTouch is an audio effect; large pitch changes inherently can sound synthetic.
-- Mobile microphones generally require HTTPS or `localhost` (on the phone itself). Network IP URLs accessed from a phone are not normally considered secure contexts.
+## Known MVP limitations
+
+- Background noise and very soft speech may cause false starts or missed starts. This uses a simple sound-level detector, not advanced voice recognition.
+- The first few dozen milliseconds of speech may be cut off because recording starts when speech is detected. Pre-roll buffering is a possible improvement.
+- For the cleanest result, use **headphones**, since speakers can trigger your mic again. The app pauses detection while its own voice plays and waits briefly before listening again.
+- Some browsers/devices choose different recording formats. Start with current Chrome or Edge on desktop. Other browsers should work if they support `MediaRecorder`, `AudioWorklet` and recording decoding, but compatibility has not been hardware-tested.
+- The character's mouth and dance animation indicate the playback state; the mouth doesn't track exact speech phonemes.
+- Opening a phone browser directly to your computer's LAN IP may fail to get microphone permission. Browsers require a **secure context** (HTTPS or localhost). Phone testing generally needs HTTPS, a secure tunnel, or local developer setup; it is a later testing step.
+- Google Fonts is used for visual styling, but the app still works with system fonts without internet after packages are installed.
 
 ## Files
 
-- `index.html`: app UI
-- `src/style.css`: responsive design and character animations
-- `src/main.js`: pre-roll logic, playback processing and UI states
-- `public/capture-processor.js`: tiny, always-on microphone AudioWorklet for pre-roll
+- `index.html`: controls, character markup, accessibility text.
+- `src/style.css`: responsive UI, cactus and waveform animations.
+- `src/main.js`: recording, speech-pause logic, audio playback, and UI state.
 
-The project is built on SoundTouchJS (`@soundtouchjs/audio-worklet`, MPL-2.0).
+## Safety and privacy
+
+The app asks for mic access on Start, stops microphone tracks when Stop is pressed, and does not contact any transcription/AI service. No recordings are uploaded or intentionally persisted.
