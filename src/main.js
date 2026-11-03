@@ -118,7 +118,9 @@ async function startListening() {
     // Unlike starting MediaRecorder AFTER detecting speech, this processor
     // captures continuously and keeps a 650ms circular pre-roll in memory.
     if (!captureWorkletRegistered) {
-      await audioContext.audioWorklet.addModule('/capture-processor.js');
+      await audioContext.audioWorklet.addModule(
+        `${import.meta.env.BASE_URL}capture-processor.js`
+      );
       captureWorkletRegistered = true;
     }
     if (!enabled || currentSession !== sessionId) {
