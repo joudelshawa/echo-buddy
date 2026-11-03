@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f7fc" />
+  <meta name="description" content="A fun, local, browser-based talking toy that repeats your voice in a silly pitch." />
+  <title>Echo Buddy — Talking Toy</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span> echo buddy <span class="brand-chip">V2</span></div>
+      <div class="privacy"><span class="privacy-dot"></span> Audio stays on your device</div>
+    </header>
+
+    <section class="hero" aria-label="Talking toy">
+      <p class="eyebrow">SAY IT. HEAR IT. GIGGLE.</p>
+      <h1>Talk to your<br /><span>little echo.</span></h1>
+      <p class="subtitle">Say something silly, pause, and hear it back in a funny voice.</p>
+
+      <div class="stage" id="stage" data-mode="off" data-character="on">
+        <div class="stage-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="character-wrap" id="characterWrap" aria-hidden="true">
+          <div class="shadow"></div>
+          <div class="cactus">
+            <div class="cactus-arm left"></div>
+            <div class="cactus-arm right"></div>
+            <div class="cactus-body">
+              <div class="spike sp1"></div><div class="spike sp2"></div><div class="spike sp3"></div>
+              <div class="face">
+                <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                <div class="cheeks"><span></span><span></span></div>
+                <div class="mouth"></div>
+              </div>
+            </div>
+            <div class="pot"><div class="pot-rim"></div><div class="pot-base"></div></div>
+          </div>
+        </div>
+        <div class="wave-wrap" id="waveWrap" aria-hidden="true">
+          <div class="wave-bars">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p>Just the sound, please.</p>
+        </div>
+        <div class="status-pill" role="status" aria-live="polite"><span class="pulse-dot"></span><span id="statusText">Mic is off</span></div>
+      </div>
+
+      <p class="helper" id="helperText">Press “Start listening”, then speak. Your browser will ask for microphone access.</p>
+      <div class="actions">
+        <button id="listenBtn" class="primary-btn" type="button"><span aria-hidden="true">🎙</span><span id="listenLabel">Start listening</span></button>
+        <button id="replayBtn" class="secondary-btn" type="button" disabled><span aria-hidden="true">↻</span> Replay</button>
+      </div>
+    </section>
+
+    <section class="settings" aria-label="Voice controls">
+      <div class="settings-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Voice controls</h2></div><span class="settings-icon">♫</span></div>
+      <div class="slider-line">
+        <div class="slider-top"><label for="pitch">Pitch <span class="muted">· higher = squeakier</span></label><output id="pitchValue" for="pitch">1.35×</output></div>
+        <input id="pitch" type="range" min="0.75" max="2.0" step="0.05" value="1.35" />
+        <div class="range-labels"><span>Deep</span><span>High & squeaky</span></div>
+      </div>
+      <div class="slider-line">
+        <div class="slider-top"><label for="speed">Speed <span class="muted">· how fast it talks</span></label><output id="speedValue" for="speed">1.00×</output></div>
+        <input id="speed" type="range" min="0.75" max="1.5" step="0.05" value="1.0" />
+        <div class="range-labels"><span>Slow</span><span>Fast</span></div>
+      </div>
+      <div class="toggle-line">
+        <div><label for="showCharacter">Show animated character</label><p>Turn off to use a clean sound-wave display instead.</p></div>
+        <label class="switch"><input type="checkbox" id="showCharacter" checked /><span class="switch-track"></span></label>
+      </div>
+    </section>
+
+    <footer><p>Made for laughs, not data collection. Nothing is uploaded or saved permanently.</p><p class="fine-print">Tip: Use headphones for cleaner recordings. Requires microphone permission and a modern browser.</p></footer>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
