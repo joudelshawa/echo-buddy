@@ -14,8 +14,8 @@ const pitchSlider = $('#pitch');
 const speedSlider = $('#speed');
 const showCharacterToggle = $('#showCharacter');
 
-const PRE_ROLL_MS = 650;          // Save audio before detecting speech
-const SILENCE_MS = 900;          // Detect the end of a phrase
+const PRE_ROLL_MS = 450;          // Save audio before detecting speech
+const SILENCE_MS = 800;          // Detect the end of a phrase
 const MIN_RECORDING_MS = 300;
 const MAX_RECORDING_MS = 12000;
 const COOLDOWN_MS = 550;         // Don't capture our own playback tail
