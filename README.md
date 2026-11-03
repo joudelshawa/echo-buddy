@@ -37,15 +37,6 @@ To shut it down, press **Ctrl + C** in the terminal.
 - SoundTouchJS AudioWorklet processes the recording with independent pitch and speed controls.
 - The sound is replayed locally; it is **not uploaded** and **not stored to a server**. It is held only in page memory until the tab closes.
 
-## Known MVP limitations
-
-- Background noise and very soft speech may cause false starts or missed starts. This uses a simple sound-level detector, not advanced voice recognition.
-- The first few dozen milliseconds of speech may be cut off because recording starts when speech is detected. Pre-roll buffering is a possible improvement.
-- For the cleanest result, use **headphones**, since speakers can trigger your mic again. The app pauses detection while its own voice plays and waits briefly before listening again.
-- Some browsers/devices choose different recording formats. Start with current Chrome or Edge on desktop. Other browsers should work if they support `MediaRecorder`, `AudioWorklet` and recording decoding, but compatibility has not been hardware-tested.
-- The character's mouth and dance animation indicate the playback state; the mouth doesn't track exact speech phonemes.
-- Opening a phone browser directly to your computer's LAN IP may fail to get microphone permission. Browsers require a **secure context** (HTTPS or localhost). Phone testing generally needs HTTPS, a secure tunnel, or local developer setup; it is a later testing step.
-- Google Fonts is used for visual styling, but the app still works with system fonts without internet after packages are installed.
 
 ## Files
 
